@@ -160,14 +160,12 @@ board_system_upgrade() {
 	klogger "messaging.deviceInfo.UPGRADE_STATUS_UPLOAD=`uci get /etc/config/messaging.deviceInfo.UPGRADE_STATUS_UPLOAD`"
 	klogger "/etc/config/messaging : `cat /etc/config/messaging`"
 
-	[ -f /proc/xiaoqiang/close_watchdog ] && echo 1 > /proc/xiaoqiang/close_watchdog
-
 	# prepare the minimum working environment
 	mount -o remount,size=100% /tmp
 	lib_list="/lib/ld-uClibc.so.0 /lib/libc.so.0 /lib/libdl.so.0 /lib/libm.so.0 \
 	/lib/libubox.so /lib/libcrypt.so.0 /lib/libgcc_s.so.1 /usr/lib/libmbedtls.so.9"
 	bin_list="/bin/busybox /bin/ash /bin/sh /bin/cat /bin/mount /bin/umount /bin/pidof /usr/bin/killall5 \
-	/bin/mkxqimage /sbin/reboot /usr/sbin/nvram /bin/usleep /sbin/mtd /usr/bin/du /usr/bin/awk"
+	/bin/mkxqimage /sbin/reboot /usr/sbin/nvram /bin/usleep /sbin/mtd"
 
 	mkdir -p /tmp/update_environment/lib
 	mkdir -p /tmp/update_environment/bin
@@ -220,4 +218,9 @@ board_system_upgrade() {
 	}
 
 	upgrade_write_mtd
+
+	# should not return to caller(flash.sh)
+	reboot
+	sleep 30
+	reboot -f
 }

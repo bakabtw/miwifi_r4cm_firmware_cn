@@ -13,6 +13,5 @@ wl1_ssid=Xiaomi
 wl1_radio=1
 model=R4CM
 flag_boot_type=2
-flag_boot_rootfs=0
 boot_wait=off
 mode=Router

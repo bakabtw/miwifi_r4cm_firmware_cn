@@ -168,6 +168,12 @@ dnsmasq() {
 		config_list_foreach "$cfg" rebind_domain append_rebind_domain
 	}
 
+	[ -f "/www/xiaoqiang/diagnosis/index.html" ] && {
+	    # network troubleshoot intercept
+	    local intercept="$(uci -q get network.lan.ipaddr)"
+	    [ -n "$intercept" ] && xappend "--intercept-ip-address=$intercept"
+	}
+
 	local is_nxdomain=$(uci -q get http_status_stat.settings.enabled)
 	is_nxdomain=${is_nxdomain:-"0"}
 	config_get_bool enable_nxdomain_resolve "$cfg" nxdomain_helper 1
@@ -175,8 +181,8 @@ dnsmasq() {
 	cc=${cc:-"CN"}
 	local nxdomain_ipaddr=$(uci -q get firewall.nxdomain.src_dip)
 	[ $is_nxdomain -eq "1" -a $cc = "CN" -a "$enable_nxdomain_resolve" = "1" -a -n "$nxdomain_ipaddr" ] && {
-		# replace nxdomain
-		xappend "--nxdomain-ip-address=$nxdomain_ipaddr"
+	    # replace nxdomain
+	    xappend "--nxdomain-ip-address=$nxdomain_ipaddr"
 	}
 
 	# dnsmasq script

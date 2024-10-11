@@ -201,6 +201,25 @@ start() {
 		fi
 	}
 
+	{
+		date_time=`date +%s`
+		boot_reason=`nvram get boot_reason`
+		if [ "$boot_reason" != "" ]
+		then
+			logger "stat_points_none boot_reason=${boot_reason}|${date_time}"
+		fi
+
+		reboot_reason=`nvram get reboot_reason`
+		if [ "$reboot_reason" != "" ]
+		then
+			logger "stat_points_none reboot_reason=${reboot_reason}|${date_time}"
+		fi
+		
+		nvram unset boot_reason
+		nvram unset reboot_reason
+		nvram commit
+	}
+
 	if [ "$ft_mode" = "1" ]
 	then
 		if [ "$ft_ret" != "0" ]

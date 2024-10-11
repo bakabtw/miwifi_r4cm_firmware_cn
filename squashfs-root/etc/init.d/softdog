@@ -32,13 +32,7 @@ shutdown() {
 }
 
 stop() {
-	[ -e /dev/watchdog ] || return 0
-
-	if [ -f /usr/bin/nohup ];then
-		nohup /usr/sbin/supervisord stop >/dev/null 2>&1 &
-	else
-		/usr/sbin/supervisord stop >/dev/null 2>&1 &
-	fi
+	nohup /usr/sbin/supervisord stop >/dev/null 2>&1 &
 	return $?
 }
 
